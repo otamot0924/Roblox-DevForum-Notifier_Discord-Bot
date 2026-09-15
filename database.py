@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 import psycopg
 from dotenv import load_dotenv
 
+from config import CONFIG
 
 load_dotenv()
 
@@ -89,7 +90,8 @@ def cleanup_old_announcements() -> None:
                     SELECT topic_id
                     FROM sent_announcements
                     ORDER BY sent_at DESC
-                    LIMIT {CONFIG['data_to_keep']}
+                    LIMIT ()
                 )
-                """
+                """,
+                (CONFIG["data_to_keep"])
             )
