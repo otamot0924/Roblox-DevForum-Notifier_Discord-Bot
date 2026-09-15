@@ -90,8 +90,8 @@ def cleanup_old_announcements() -> None:
                     SELECT topic_id
                     FROM sent_announcements
                     ORDER BY sent_at DESC
-                    LIMIT ()
+                    LIMIT %s
                 )
                 """,
-                (CONFIG["data_to_keep"])
+                (CONFIG["data_to_keep"],)
             )
