@@ -77,3 +77,19 @@ def mark_announcement_as_sent(
                     sent_at,
                 ),
             )
+
+#從資料庫裡刪除過舊的公告，僅保留最近的資料
+def cleanup_old_announcements() -> None:
+    with get_connection() as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                DELETE FROM sent_announcements
+                WHERE topic_id NOT IN (
+                    SELECT topic_id
+                    FROM sent_announcements
+                    ORDER BY sent_at DESC
+                    LIMIT {CONFIG['data_to_keep']}
+                )
+                """
+            )

@@ -7,8 +7,10 @@ from database import (
     initialize_database,
     is_announcement_sent,
     mark_announcement_as_sent,
+    cleanup_old_announcements,
 )
 from translator import translate_text
+from config import CONFIG
 
 
 def prepare_announcement(announcement: dict) -> dict:
@@ -34,7 +36,7 @@ def prepare_announcement(announcement: dict) -> dict:
 def main() -> None:
     initialize_database()
 
-    announcements = get_latest_announcements(limit=5)
+    announcements = get_latest_announcements(limit=CONFIG["announcement_count"])
 
     if not announcements:
         print("目前找不到公告")
@@ -59,6 +61,8 @@ def main() -> None:
         )
 
         new_announcement_count += 1
+
+    cleanup_old_announcements()
 
     if new_announcement_count == 0:
         print("沒有需要發送的新公告")
