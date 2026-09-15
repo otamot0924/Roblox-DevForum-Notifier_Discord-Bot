@@ -63,6 +63,7 @@ def main() -> None:
         new_announcement_count += 1
 
     cleanup_old_announcements()
+    print("成功清除舊資料")
 
     if new_announcement_count == 0:
         print("沒有需要發送的新公告")
