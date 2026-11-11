@@ -14,6 +14,21 @@ HEADERS = {
     "User-Agent": "RobloxDevForumNotifier/0.1"
 }
 
+#取得公告標籤，將字典或字串統一轉成字串列表
+def normalize_tags(tags: list) -> list[str]:
+    
+    result = []
+
+    for tag in tags or []:
+        if isinstance(tag, str):
+            result.append(tag)
+        elif isinstance(tag, dict):
+            name = tag.get("name") or tag.get("slug")
+            if name:
+                result.append(str(name))
+
+    return result
+
 #取得最新五篇公告，回傳一個字典列表
 def get_latest_announcements(limit: int = 5) -> list[dict]:
 
@@ -49,7 +64,7 @@ def get_latest_announcements(limit: int = 5) -> list[dict]:
                 "created_at": topic["created_at"],
                 "views": topic.get("views", 0),
                 "reply_count": topic.get("reply_count", 0),
-                "tags": topic.get("tags", []),
+                "tags": normalize_tags(topic.get("tags", [])),
             }
         )
 
@@ -204,6 +219,7 @@ def format_time(timestamp: str) -> str:
 
 if __name__ == "__main__":
     topics = get_latest_announcements(limit=1)
+    print(topics[0]["tags"])   # 修改前先看原始格式
 
     for topic in topics:
         excerpt = get_announcement_excerpt(topic)
